@@ -11,6 +11,7 @@
             padding: 0;
             transition: all 0.5s ease;
             --bg-image: none;
+            color: white;
         }
         body::before {
             content: '';
@@ -19,24 +20,27 @@
             left: 0;
             width: 100%;
             height: 100%;
+            background-color: black;
             background-image: var(--bg-image, none);
             background-size: cover;
             background-position: center;
             filter: blur(0px);
             z-index: -1;
-            transition: filter 0.5s ease;
+            transition: filter 0.5s ease, opacity 1.5s ease;
+            opacity: 0;
         }
         body.hover-active::before {
             filter: blur(100px);
+            opacity: 1;
         }
         body.hover-active {
             color: white;
         }
-        .header { background: #f8f8f8; padding: 20px; text-align: center; transition: all 0.5s ease; }
-        body.hover-active .header { background: rgba(0, 0, 0, 0.3); }
+        .header { background: #f8f8f8; padding: 20px; text-align: center; transition: all 0.5s ease; color: black; }
+        body.hover-active .header { background: rgba(0, 0, 0, 0.3); color: white; }
         .portfolio { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; padding: 10px; }
-        .portfolio-item { border: 1px solid #ccc; padding: 10px; text-align: center; transition: all 0.3s ease; }
-        body.hover-active .portfolio-item { border-color: rgba(255, 255, 255, 0.5); background: rgba(0, 0, 0, 0.2); }
+        .portfolio-item { border: 1px solid #ccc; padding: 10px; text-align: center; transition: all 0.3s ease; color: black; }
+        body.hover-active .portfolio-item { border-color: rgba(255, 255, 255, 0.5); background: rgba(0, 0, 0, 0.2); color: white; }
         img { max-width: 100%; height: auto; cursor: pointer; }
     </style>
 </head>
@@ -48,16 +52,20 @@
     <div class="portfolio">
         <div class="portfolio-item">
             <img src="bramble_white_bottom.PNG" alt="Bramble" 
-                 onmouseover="setBackground('bramble_white_bottom.PNG'); document.body.classList.add('hover-active')" 
+                 onmouseover="setBackground(this.src); document.body.classList.add('hover-active')" 
                  onmouseout="clearBackground(); document.body.classList.remove('hover-active')">
             <p>Bramble. Oil on Canvas</p>
         </div>
         <div class="portfolio-item">
-            <img src="art2.jpg" alt="Art Piece 2">
+            <img src="art2.jpg" alt="Art Piece 2"
+                 onmouseover="setBackground(this.src); document.body.classList.add('hover-active')" 
+                 onmouseout="clearBackground(); document.body.classList.remove('hover-active')">
             <p>Art Piece 2 Description</p>
         </div>
         <div class="portfolio-item">
-            <img src="art3.jpg" alt="Art Piece 3">
+            <img src="art3.jpg" alt="Art Piece 3"
+                 onmouseover="setBackground(this.src); document.body.classList.add('hover-active')" 
+                 onmouseout="clearBackground(); document.body.classList.remove('hover-active')">
             <p>Art Piece 3 Description</p>
         </div>
     </div>
