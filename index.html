@@ -31,7 +31,7 @@
             opacity: 0;
         }
         body.hover-active::before {
-            filter: blur(20px);
+            filter: blur(100px);
             opacity: 1;
         }
         body.hover-active {
@@ -39,6 +39,13 @@
         }
         .header { background: transparent; padding: 20px; text-align: center; transition: all 0.5s ease; color: white; }
         body.hover-active .header { background: rgba(0, 0, 0, 0.3); color: white; }
+        .header h1 {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .header h1:hover {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
         .portfolio { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; padding: 10px; }
         .portfolio-item { border: 1px solid #ccc; padding: 10px; text-align: center; transition: all 0.3s ease; color: white; background: transparent; }
         body.hover-active .portfolio-item { border-color: rgba(255, 255, 255, 0.5); background: rgba(0, 0, 0, 0.2); color: white; }
@@ -47,36 +54,48 @@
 </head>
 <body>
     <div class="header">
-        <h1>Welcome to My Art Portfolio</h1>
+        <h1 onmouseover="clearBackgroundPermanently()" onmouseout="restorePreviousBackground()">Welcome to My Art Portfolio</h1>
         <p>Have a gander.</p>
     </div>
     <div class="portfolio">
         <div class="portfolio-item">
             <img src="bramble_white_bottom.PNG" alt="Bramble" 
                  onmouseover="setBackground(this.src); document.body.classList.add('hover-active')" 
-                 onmouseout="clearBackground(); document.body.classList.remove('hover-active')">
+                 onmouseout="">
             <p>Bramble. Oil on Canvas</p>
         </div>
         <div class="portfolio-item">
-            <img src="art2.jpg" alt="Art Piece 2"
+            <img src="solice_main.PNG" alt="Solice"
                  onmouseover="setBackground(this.src); document.body.classList.add('hover-active')" 
-                 onmouseout="clearBackground(); document.body.classList.remove('hover-active')">
-            <p>Art Piece 2 Description</p>
+                 onmouseout="">
+            <p>Solice. Mixed media on Canvas</p>
         </div>
         <div class="portfolio-item">
             <img src="art3.jpg" alt="Art Piece 3"
                  onmouseover="setBackground(this.src); document.body.classList.add('hover-active')" 
-                 onmouseout="clearBackground(); document.body.classList.remove('hover-active')">
+                 onmouseout="">
             <p>Art Piece 3 Description</p>
         </div>
     </div>
 
     <script>
+        let previousBackground = 'none';
+
         function setBackground(imageSrc) {
-            document.body.style.setProperty('--bg-image', `url('${imageSrc}')`);
+            previousBackground = `url('${imageSrc}')`;
+            document.body.style.setProperty('--bg-image', previousBackground);
         }
-        function clearBackground() {
+
+        function clearBackgroundPermanently() {
             document.body.style.setProperty('--bg-image', 'none');
+            document.body.classList.remove('hover-active');
+        }
+
+        function restorePreviousBackground() {
+            document.body.style.setProperty('--bg-image', previousBackground);
+            if (previousBackground !== 'none') {
+                document.body.classList.add('hover-active');
+            }
         }
     </script>
 </body>
