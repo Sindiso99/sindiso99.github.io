@@ -27,7 +27,7 @@
             background-position: center;
             filter: blur(0px);
             z-index: -1;
-            transition: filter 0.5s ease, opacity 1.5s ease, background-image 1.5s ease;
+            transition: filter 0.5s ease, opacity 1.5s ease;
             opacity: 0;
         }
         body.hover-active::before {
@@ -57,8 +57,8 @@
 </head>
 <body>
     <div class="header">
-        <h1 onmouseover="clearBackgroundPermanently()" onmouseout="">Welcome to My Art Portfolio</h1>
-        <p>Have a gander.</p>
+        <h1 onmouseover="clearBackgroundPermanently()" onmouseout="">SITTHE</h1>
+        <p>Welcome to my home. Have a gander.</p>
     </div>
     <div class="portfolio">
         <div class="portfolio-item">
@@ -83,16 +83,31 @@
 
     <script>
         let previousBackground = 'none';
+        let transitionTimeout;
 
         function setBackground(imageSrc) {
+            clearTimeout(transitionTimeout);
             previousBackground = `url('${imageSrc}')`;
-            document.body.style.setProperty('--bg-image', previousBackground);
+            
+            // Fade out current image
+            document.body.classList.add('fade-out');
+            
+            // Wait for fade out to complete, then change the image and fade in
+            transitionTimeout = setTimeout(() => {
+                document.body.style.setProperty('--bg-image', previousBackground);
+                document.body.classList.remove('fade-out');
+            }, 750);
         }
 
         function clearBackgroundPermanently() {
+            clearTimeout(transitionTimeout);
             document.body.classList.add('fade-out');
             document.body.classList.remove('hover-active');
-            previousBackground = 'none';
+            
+            transitionTimeout = setTimeout(() => {
+                document.body.style.setProperty('--bg-image', 'none');
+                previousBackground = 'none';
+            }, 750);
         }
     </script>
 </body>
