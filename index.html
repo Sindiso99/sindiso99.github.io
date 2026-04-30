@@ -29,13 +29,12 @@
         }
         body.hover-active {
             color: white;
-            filter: blur(50px);
         }
         .header { background: #f8f8f8; padding: 20px; text-align: center; transition: all 0.5s ease; }
         body.hover-active .header { background: rgba(0, 0, 0, 0.3); }
         .portfolio { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; padding: 10px; }
         .portfolio-item { border: 1px solid #ccc; padding: 10px; text-align: center; transition: all 0.3s ease; }
-        body.hover-active .portfolio-item { border-color: rgba(255, 255, 255, 0.5); background: rgba(0, 0, 0, 0.2); }
+        body.hover-active .portfolio-item { border-color: rgba(255, 255, 255, 0.5); background: rgba(0, 0, 0, 0.2); filter: blur(50px);}
         img { max-width: 100%; height: auto; cursor: pointer; }
     </style>
 </head>
