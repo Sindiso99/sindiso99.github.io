@@ -57,8 +57,8 @@
 </head>
 <body>
     <div class="header">
-        <h1 onmouseover="clearBackgroundPermanently()" onmouseout="">SITTHE</h1>
-        <p>Welcome to my home. Have a gander.</p>
+        <h1 onmouseover="clearBackgroundPermanently()" onmouseout="">Welcome to My Art Portfolio</h1>
+        <p>Have a gander.</p>
     </div>
     <div class="portfolio">
         <div class="portfolio-item">
@@ -84,29 +84,42 @@
     <script>
         let previousBackground = 'none';
         let transitionTimeout;
+        let isTransitioning = false;
 
         function setBackground(imageSrc) {
             clearTimeout(transitionTimeout);
-            previousBackground = `url('${imageSrc}')`;
             
-            // Fade out current image
-            document.body.classList.add('fade-out');
+            const currentBg = document.body.style.getPropertyValue('--bg-image');
+            const newBg = `url('${imageSrc}')`;
             
-            // Wait for fade out to complete, then change the image and fade in
-            transitionTimeout = setTimeout(() => {
-                document.body.style.setProperty('--bg-image', previousBackground);
-                document.body.classList.remove('fade-out');
-            }, 750);
+            // If already showing an image, fade out then in
+            if (isTransitioning || (currentBg && currentBg !== 'none')) {
+                isTransitioning = true;
+                document.body.classList.add('fade-out');
+                
+                transitionTimeout = setTimeout(() => {
+                    document.body.style.setProperty('--bg-image', newBg);
+                    previousBackground = newBg;
+                    document.body.classList.remove('fade-out');
+                    isTransitioning = false;
+                }, 750);
+            } else {
+                // If no image is showing, just set it directly and fade in
+                document.body.style.setProperty('--bg-image', newBg);
+                previousBackground = newBg;
+            }
         }
 
         function clearBackgroundPermanently() {
             clearTimeout(transitionTimeout);
+            isTransitioning = true;
             document.body.classList.add('fade-out');
             document.body.classList.remove('hover-active');
             
             transitionTimeout = setTimeout(() => {
                 document.body.style.setProperty('--bg-image', 'none');
                 previousBackground = 'none';
+                isTransitioning = false;
             }, 750);
         }
     </script>
