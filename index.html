@@ -27,12 +27,15 @@
             background-position: center;
             filter: blur(0px);
             z-index: -1;
-            transition: filter 0.5s ease, opacity 1.5s ease;
+            transition: filter 0.5s ease, opacity 1.5s ease, background-image 1.5s ease;
             opacity: 0;
         }
         body.hover-active::before {
             filter: blur(20px);
             opacity: 1;
+        }
+        body.fade-out::before {
+            opacity: 0;
         }
         body.hover-active {
             color: white;
@@ -54,25 +57,25 @@
 </head>
 <body>
     <div class="header">
-        <h1 onmouseover="clearBackgroundPermanently()" onmouseout="restorePreviousBackground()">Welcome to My Art Portfolio</h1>
+        <h1 onmouseover="clearBackgroundPermanently()" onmouseout="">Welcome to My Art Portfolio</h1>
         <p>Have a gander.</p>
     </div>
     <div class="portfolio">
         <div class="portfolio-item">
             <img src="bramble_white_bottom.PNG" alt="Bramble" 
-                 onmouseover="setBackground(this.src); document.body.classList.add('hover-active')" 
+                 onmouseover="setBackground(this.src); document.body.classList.add('hover-active'); document.body.classList.remove('fade-out')" 
                  onmouseout="">
             <p>Bramble. Oil on Canvas</p>
         </div>
         <div class="portfolio-item">
             <img src="solice_main.PNG" alt="Solice"
-                 onmouseover="setBackground(this.src); document.body.classList.add('hover-active')" 
+                 onmouseover="setBackground(this.src); document.body.classList.add('hover-active'); document.body.classList.remove('fade-out')" 
                  onmouseout="">
             <p>Solice. Mixed media on Canvas</p>
         </div>
         <div class="portfolio-item">
             <img src="art3.jpg" alt="Art Piece 3"
-                 onmouseover="setBackground(this.src); document.body.classList.add('hover-active')" 
+                 onmouseover="setBackground(this.src); document.body.classList.add('hover-active'); document.body.classList.remove('fade-out')" 
                  onmouseout="">
             <p>Art Piece 3 Description</p>
         </div>
@@ -87,15 +90,9 @@
         }
 
         function clearBackgroundPermanently() {
-            document.body.style.setProperty('--bg-image', 'none');
+            document.body.classList.add('fade-out');
             document.body.classList.remove('hover-active');
-        }
-
-        function restorePreviousBackground() {
-            document.body.style.setProperty('--bg-image', previousBackground);
-            if (previousBackground !== 'none') {
-                document.body.classList.add('hover-active');
-            }
+            previousBackground = 'none';
         }
     </script>
 </body>
