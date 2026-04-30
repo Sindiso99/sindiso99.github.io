@@ -10,117 +10,128 @@
             margin: 0; 
             padding: 0;
             background-color: black;
-            transition: all 0.5s ease;
-            --bg-image: none;
             color: white;
+            --bg-image-1: none;
+            --bg-image-2: none;
         }
-        body::before {
+
+        /* TWO LAYERS FOR TRUE CROSSFade */
+        body::before,
+        body::after {
             content: '';
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: black;
-            background-image: var(--bg-image, none);
             background-size: cover;
             background-position: center;
-            filter: blur(0px);
-            z-index: -1;
-            transition: filter 0.5s ease, opacity 1.5s ease;
-            opacity: 0;
-        }
-        body.hover-active::before {
             filter: blur(20px);
+            z-index: -1;
+            transition: opacity 0.6s ease;
+        }
+
+        body::before {
+            background-image: var(--bg-image-1);
             opacity: 1;
         }
-        body.fade-out::before {
+
+        body::after {
+            background-image: var(--bg-image-2);
             opacity: 0;
         }
-        body.hover-active {
-            color: white;
+
+        /* Crossfade toggle */
+        body.crossfade::before {
+            opacity: 0;
         }
-        .header { background: transparent; padding: 20px; text-align: center; transition: all 0.5s ease; color: white; }
-        body.hover-active .header { background: rgba(0, 0, 0, 0.3); color: white; }
+
+        body.crossfade::after {
+            opacity: 1;
+        }
+
+        /* Optional: only show when hovering */
+        body:not(.hover-active)::before,
+        body:not(.hover-active)::after {
+            opacity: 0;
+        }
+
+        .header { 
+            padding: 20px; 
+            text-align: center; 
+        }
+
         .header h1 {
             cursor: pointer;
-            transition: all 0.3s ease;
         }
-        .header h1:hover {
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+
+        .portfolio { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); 
+            gap: 10px; 
+            padding: 10px; 
         }
-        .portfolio { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; padding: 10px; }
-        .portfolio-item { border: 1px solid #ccc; padding: 10px; text-align: center; transition: all 0.3s ease; color: white; background: transparent; }
-        body.hover-active .portfolio-item { border-color: rgba(255, 255, 255, 0.5); background: rgba(0, 0, 0, 0.2); color: white; }
-        img { max-width: 100%; height: auto; cursor: pointer; }
+
+        .portfolio-item { 
+            border: 1px solid rgba(255,255,255,0.3); 
+            padding: 10px; 
+            text-align: center; 
+            background: rgba(0,0,0,0.2);
+        }
+
+        img { 
+            max-width: 100%; 
+            height: auto; 
+            cursor: pointer; 
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1 onmouseover="clearBackgroundPermanently()" onmouseout="">Welcome to My Art Portfolio</h1>
+        <h1 onmouseover="clearBackground()">Welcome to My Art Portfolio</h1>
         <p>Have a gander.</p>
     </div>
+
     <div class="portfolio">
         <div class="portfolio-item">
             <img src="bramble_white_bottom.PNG" alt="Bramble" 
-                 onmouseover="setBackground(this.src); document.body.classList.add('hover-active'); document.body.classList.remove('fade-out')" 
-                 onmouseout="">
+                 onmouseover="setBackground(this.src)">
             <p>Bramble. Oil on Canvas</p>
         </div>
+
         <div class="portfolio-item">
             <img src="solice_main.PNG" alt="Solice"
-                 onmouseover="setBackground(this.src); document.body.classList.add('hover-active'); document.body.classList.remove('fade-out')" 
-                 onmouseout="">
+                 onmouseover="setBackground(this.src)">
             <p>Solice. Mixed media on Canvas</p>
         </div>
+
         <div class="portfolio-item">
             <img src="art3.jpg" alt="Art Piece 3"
-                 onmouseover="setBackground(this.src); document.body.classList.add('hover-active'); document.body.classList.remove('fade-out')" 
-                 onmouseout="">
+                 onmouseover="setBackground(this.src)">
             <p>Art Piece 3 Description</p>
         </div>
     </div>
 
     <script>
-        let previousBackground = 'none';
-        let transitionTimeout;
-        let isTransitioning = false;
+        let showingFirst = true;
 
         function setBackground(imageSrc) {
-            clearTimeout(transitionTimeout);
-            
-            const currentBg = document.body.style.getPropertyValue('--bg-image');
             const newBg = `url('${imageSrc}')`;
-            
-            // If already showing an image, fade out then in
-            if (isTransitioning || (currentBg && currentBg !== 'none')) {
-                isTransitioning = true;
-                document.body.classList.add('fade-out');
-                
-                transitionTimeout = setTimeout(() => {
-                    document.body.style.setProperty('--bg-image', newBg);
-                    previousBackground = newBg;
-                    document.body.classList.remove('fade-out');
-                    isTransitioning = false;
-                }, 750);
+
+            if (showingFirst) {
+                document.body.style.setProperty('--bg-image-2', newBg);
             } else {
-                // If no image is showing, just set it directly and fade in
-                document.body.style.setProperty('--bg-image', newBg);
-                previousBackground = newBg;
+                document.body.style.setProperty('--bg-image-1', newBg);
             }
+
+            document.body.classList.toggle('crossfade');
+            showingFirst = !showingFirst;
+
+            document.body.classList.add('hover-active');
         }
 
-        function clearBackgroundPermanently() {
-            clearTimeout(transitionTimeout);
-            isTransitioning = true;
-            document.body.classList.add('fade-out');
+        function clearBackground() {
             document.body.classList.remove('hover-active');
-            
-            transitionTimeout = setTimeout(() => {
-                document.body.style.setProperty('--bg-image', 'none');
-                previousBackground = 'none';
-                isTransitioning = false;
-            }, 750);
         }
     </script>
 </body>
